@@ -1,18 +1,18 @@
 #include <iostream>
-#include <array>
+#include <vector>
 #include <algorithm>
 #include <numeric>
 #include <fstream>
 
 using namespace std;
 
-// COMSC-210 | Lab 12 | Ian Kusmiantoro
+// COMSC-210 | Lab 13 | Ian Kusmiantoro
 // This program tracks the number of points a team scored in a season
+// Using vectors instead of arrays of course
 
 int main() {
-    const int SIZE = 50;
     const int SEARCH = 67;
-    array<int, SIZE> scores;
+    vector<int> scores;
 
     ifstream fin;
     fin.open("scores.txt");
@@ -20,10 +20,15 @@ int main() {
     // Checking if file input stream is good
     if (fin.good()) {
 
-        // Input data from file one line at a time
-        for (int i = 0; i < scores.size(); i++) {
-            fin >> scores.at(i);
-        } 
+        // Input data until read fail
+        int temp_score;
+        while (fin >> temp_score) {
+            scores.push_back(temp_score);
+        }
+
+        if (scores.empty()) {
+            cout << "Scores array is empty, something went wrong." << endl;
+        }
 
         // Output before scores
         cout << "===== Scores =====" << endl;
@@ -54,7 +59,7 @@ int main() {
         cout << "Median Score: " << scores.at(scores.size() / 2) << endl;
 
         // Find using iterator and algorithm
-        array<int, SIZE>::iterator it;
+        vector<int>::iterator it;
         it = find(scores.begin(), scores.end(), SEARCH);
 
         // If the iterator didn't reach the end (last element + 1), it managed to find the element
@@ -67,7 +72,7 @@ int main() {
         }
 
         // Wipe the scores for the next season!
-        scores.fill(0);
+        fill(scores.begin(), scores.end(), 0);
         cout << endl;
         cout << "===== Wiped Scores =====" << endl;
         for (int score : scores) {
